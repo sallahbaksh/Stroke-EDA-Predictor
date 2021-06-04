@@ -15,4 +15,4 @@ The following dependencies are required:<br/>
   sklearn.utils\
   sklearn.metrics\
   imblearn.over_sampling\
-  sklearn.svm\
+  sklearn.svm
