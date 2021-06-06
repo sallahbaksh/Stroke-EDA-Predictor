@@ -18,6 +18,21 @@
             </map>
           </value>
         </entry>
+        <entry key="31107">
+          <value>
+            <map>
+              <entry key="5eKjov2ArCoRLh4PYqGUs6">
+                <value>
+                  <PublishedNotebookState>
+                    <option name="id" value="8N1YS1XpCDF9NZyW75g0SA" />
+                    <option name="link" value="https://view.datalore.io/notebook/8N1YS1XpCDF9NZyW75g0SA" />
+                    <option name="owner" value="5eKjov2ArCoRLh4PYqGUs6" />
+                  </PublishedNotebookState>
+                </value>
+              </entry>
+            </map>
+          </value>
+        </entry>
       </map>
     </option>
   </component>
