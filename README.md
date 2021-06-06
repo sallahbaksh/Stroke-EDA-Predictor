@@ -45,4 +45,4 @@ Notebook or JupyterLab will also suffice.
 | :------------------: | :---------------------------------------------: |
 | Chathumini Abeyratna | [Logistic Regression](LogisticRegression.ipynb) |
 | Saadiya Allahbaksh   | [SVM](SVM.ipynb)                                |
-| Kevin Karnani        | [RandomForest]()                                |
+| Kevin Karnani        | [RandomForest](RandomForest.ipynb)                                |
