@@ -1,0 +1,231 @@
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Logistic Regression}
+\label{sec:methods:Logistic Regression}
+
+The Logistic Regression Model is a statistical model that is used to solve classification problems and basically models the probability of a certain class or event happening. In this case, we will be using it to predict whether a person with certain features will get a stroke or not. We will be testing it with both batch gradient descent and stochastic gradient descent. We will also explore k-folding and seeing the effects it might have on the model's results.
+
+\subsubsection{Batch Gradient Descent}
+\label{sec:methods:Logistic Regression Model:Batch Gradient Descent}
+For this model, I split the data 2/3 for the training set and 1/3 for the testing set. I set random initial values for theta, which are the parameters, and used a learning rate $\eta$ of 0.01. N is the number of observations. This model ran until the absolute value change in the loss of data was less than $2^{-23}$ or after 1,500 iterations had passed.\\
+
+While the model ran, it:
+\begin{itemize}
+    \item Updated the parameters (theta) using batch gradient descent. Batch gradient descent computes the gradient on the whole dataset. To minimize the cost function and find the optimal solution, we need to run the gradient descent on each parameter $\theta_{j}$:
+
+    \begin{equation}
+        \label{eq:Equation2}
+        \theta_{j} \leftarrow \theta_{j} - \eta \dfrac{\partial}{\partial{\theta_{j}}} J(\theta)
+    \end{equation}
+
+    Where the value of the gradient in Equation \eqref{eq:Equation2} is:
+
+    \begin{equation}
+        \label{eq:Equation3}
+        \dfrac{\partial}{\partial{\theta_{j}}} J(\theta) = \dfrac{1}{N} \sum_{i = 1}^{N} \Big(h_{\theta}(x^{(i)}) - y^{(i)}\Big)x_{j}^{(i)}
+    \end{equation}
+
+    In Equation \eqref{eq:Equation3}, $h_{\theta}(x^{(i)})$ is the sigmoid function, or logistic function. It maps input values to a limited interval. It squeezes any number in $\mathbb{R}$ to the open interval $(0, 1)$, so it is well suited for classification purposes. This hypothesis function approximates the probability of the actual output being equal to 1 and is equivalent to:
+
+    \begin{equation}
+        \label{eq:Equation4}
+        P(y = 1 \ | \ \theta,x) = \dfrac{1}{1 + e^{-\theta^{T}x}}
+    \end{equation}
+
+    Therefore, using Equation \eqref{eq:Equation4}, our sigmoid function is defined as:
+
+    \begin{equation}
+        \label{eq:Equation5}
+        h_{\theta}(x^{(i)}) = \dfrac{1}{1 + e^{-\theta^{T}x^{(i)}}}
+    \end{equation}
+
+    Plugging Equation \eqref{eq:Equation5} into the gradient descent function, we get the final formula for updating the parameters using batch gradient descent:
+
+    \begin{equation}
+        \label{eq:Equation6}
+        \theta_{j} \leftarrow \theta_{j} - \dfrac{\eta}{N} \sum_{i = 1}^{N} \Big(h_{\theta}(x^{(i)}) - y^{(i)}\Big)x_{j}^{(i)}
+    \end{equation}
+
+    Equation \eqref{eq:Equation6} can then be vectorized into easier terms, for code optimizations:
+
+    \begin{equation}
+        \label{eq:Equation7}
+        \theta \leftarrow \theta - \dfrac{\eta}{N}X^{T}\Big(h_{\theta}(X) - Y\Big)
+    \end{equation}
+
+    \item Computed the loss of the data using the logistic regression cost function. The cost function basically summarizes how well the model is behaving - the smaller the value is, the better. Since we’re dealing with a binary classification problem, we define the cost for the two cases separately:
+
+    \begin{equation}
+        \label{eq:Equation8}
+        J(\theta) =
+        \begin{cases}
+            -\ln(h_{\theta}(x)) & y = 1\\
+            -\ln(1 - h_{\theta}(x)) & y = 0
+        \end{cases}
+    \end{equation}
+
+    Equation \eqref{eq:Equation8} can be simplified to:
+
+    \begin{equation}
+        \label{eq:Equation9}
+        J(\theta) = -y^{(i)}\ln(h_{\theta}(x)) - (1 - y^{(i)})\ln(1 - h_{\theta}(x))
+    \end{equation}
+
+    For N observations, we modify Equation \eqref{eq:Equation9} to:
+
+    \begin{equation}
+        \label{eq:Equation10}
+        J(\theta) = -\dfrac{1}{N} \sum_{i = 1}^{N} \Big(y^{(i)}\ln(h_{\theta}(x)) + (1 - y^{(i)})\ln(1 - h_{\theta}(x))\Big)
+    \end{equation}
+
+    Equation \eqref{eq:Equation10} can then be vectorized into easier terms, for code optimizations:
+
+    \begin{equation}
+        \label{eq:Equation11}
+        J(\theta) = -\dfrac{1}{N} \Big(Y^{T} \ln(h_{\theta}(X)) + (1 - Y)^{T}\ln(1 - h_{\theta}(X))\Big)
+    \end{equation}
+\end{itemize}
+
+\noindent Like stated above, this while-loop ran until either it created ideal parameters (absolute value change in the loss of data was less than $2^{-23}$) or until 1,500 iterations happened.
+
+\subsubsection{Stochastic Gradient Descent}
+\label{sec:methods:Logistic Regression Model:Stochastic Gradient Descent}
+
+Then, we switched out the batch gradient descent for stochastic gradient descent. Stochastic gradient descent computes the gradient using a random instance at a single time, so it’s typically much faster than batch gradient descent. Algorithm \eqref{alg:Algorithm1} shows the pseudocode:
+
+\begin{algorithm}
+    \caption{Stochastic Gradient Descent}
+    \label{alg:Algorithm1}
+    \begin{algorithmic}[1]
+        \ENSURE $m > 0$
+        \FOR{$i$ in range($m$)}
+        \STATE{$\theta_{j} \leftarrow \theta_{j} + \eta(\hat{y} - y^{(i)})X_{j}^{(i)}$}
+        \ENDFOR
+    \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{K-Folds Cross Validation}
+\label{sec:methods:Logistic Regression Model:K-Folds Cross Validation}
+
+Our last stage with logistic regression was to see how the model worked in k-fold cross validation. Cross validation is a resampling, statistical method used to estimate the skill of a model. $k$ refers to the number of groups that a given data set will be split into. Once the data is split, each group will get a chance to be the testing set and the data will be put through both the logistic regression with batch gradient descent and stochastic gradient descent. Algorithm \eqref{alg:Algorithm2} shows the pseudocode:
+
+\begin{algorithm}
+    \caption{K-Folds Cross Validation}
+    \label{alg:Algorithm2}
+    \begin{algorithmic}[2]
+        \ENSURE $k > 1$
+        \STATE{Randomly shuffle the dataset}
+        \STATE{Split the dataset into k groups}
+        \FOR{each unique group}
+        \STATE{Take the group as the testing set}
+        \STATE{Use the remaining groups as the training set}
+        \STATE{Perform logistic regression with the training and testing set}
+        \STATE{Compute and save the accuracy, precision, recall and f1 measure in an array}
+        \ENDFOR
+        \STATE{Display the accuracy, precision, recall and f1 measure arrays for each fold}
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{Support Vector Machines}
+\label{sec:methods:Support Vector Machines}
+
+The Support Vector Machine (SVM) is a supervised learning model that can be used to solve classification problems. The SVM model finds a hyperplane that distinctly classifies data points in an $N$-dimensional space, where $N$ is the number of features. For our dataset, 10 features are being used to predict whether a person will get a stroke or not. This model chooses the best hyperplane that separates the data into positive and negative values and is the furthest away from the closest data points in order to classify the data points. For the binary class label, the dataset classified 0 as patients who did not have a stroke and 1 as patients who had a stroke. For the SVM model, 0 is mapped to $-1$ and 1 is mapped to $+1$.\\
+
+\noindent The hyperplane is found by minimizing a cost function to find the optimal weights (w) and the intercept (b). The SVM model is defined as:
+
+\begin{equation}
+    \label{eq:Equation12}
+    f(x) = \mathrm{sgn}(wx + b)
+\end{equation}
+
+\noindent A cost function measures how the model is doing in terms of finding a hyperplane that separates the negative and positive data points with the biggest margin possible while keeping the misclassification of the data as low as possible. For the SVM algorithm, we decided to minimize the cost function by using stochastic gradient descent. By expanding upon Equation \eqref{eq:Equation12}, the formula is given below:
+
+\begin{equation}
+    \label{eq:Equation13}
+    J(w) = \dfrac{1}{2} \lVert w \rVert^2 + \dfrac{C}{N} \sum_{i = 1}^{N} \mathrm{max}(0, 1 - y^{(i)}(wx^{(i)} + b))
+\end{equation}
+
+\noindent Where max($0, 1 - y^{(i)}(wx^{(i)} + b)$) is the hinge loss function. A hinge loss function is a loss function that is used for binary classification. The gradient of Equation \eqref{eq:Equation13} is calculated as follows:
+
+\begin{equation}
+    \label{eq:Equation14}
+    \dfrac{\partial}{\partial{w}}J(w) = \dfrac{1}{N} \sum_{i = 1}^{N}
+    \begin{cases}
+        w & \mathrm{max}(0, 1 - y^{(i)}(wx^{(i)} + b)) = 0\\
+        w - Cy^{(i)}x^{(i)} & \mathrm{max}(0, 1 - y^{(i)}(wx^{(i)} + b)) \neq 0
+    \end{cases}
+\end{equation}
+
+\noindent For the stochastic gradient descent algorithm, the maximum number of iterations is set to 2048, the learning rate is set to 0.000001 and the cost threshold is set to 0.01. The model will train the data until the model starts to converge, i.e., when there is no significant decrease in the current cost when compared to the previous cost.
+
+\subsection{Random Forest}
+\label{sec:methods:Random Forest}
+
+Random forest, as the "forest" part of the name implies, consists of a large number of individual Decision Trees (DTs) that operate as an ensemble. Each individual tree in the random forest spits out a class prediction and the class with the most votes becomes our model’s prediction. For some background, we picked this route because DTs, while still discriminative in nature, perform classification in a manner that is fundamentally different than other algorithms like Logistic Regression and SVMs. Each internal node tests an attribute, each branch is an attribute value, and each leaf assigns a classification. While the latter two algorithms use metric cost functions between features (Euclidean/Manhattan Distance) and sometimes a kernel function (Gaussian/Logistic Kernel), Decision Trees apply a sequence of decisions or rules that often depend on a single variable at a time.\\
+
+\noindent As we run through using a Decision Tree, we start at the root node, check on a feature and value, and make a decision from there, taking us to the next level of the tree. The way we decide which features we split on is through information gain, which is based on sample entropy. Sample Entropy (Equation \eqref{eq:Equation15}) and Information Gain (Equation \eqref{eq:Equation16}) can be computed as follows:
+
+\begin{equation}
+    \label{eq:Equation15}
+    H(Y) = - \sum_{i=1}^N P(Y=y_i) \log_2 P(Y=y_i)
+\end{equation}
+
+\begin{equation}
+    \label{eq:Equation16}
+    I(Y) = H(Y) - \sum_{i = 1}^{N} \dfrac{P(Y = y_{i})}{P(Y)} H(Y_{i})
+\end{equation}
+
+\noindent The easiest way to run through our own tree would be to do this is if we deal with binarized data and construct binary DTs, for example:
+
+\begin{forest}
+    for tree={l sep=30pt, parent anchor=south, align=center}
+    [$x_1$,
+    [$x_2$, label=T,
+    [$+$, label=T],
+    [$+$, label=F]
+    ],
+    [$x_2$, label=F,
+    [$+$, label=T],
+    [$-$, label=F]
+    ]
+    ]
+\end{forest}
+
+\noindent However, since determining the optimal value of continuous data to split on is no easy feat, all unique values were used instead. While every tree with a branching factor greater than two can be recomposed into an equivalent binary tree, so we decided to do this to reduce recursive complexity. Now that we have a way to decide which feature to split on, we want to first pick the features that yield the highest Information Gain, or the lowest sample entropy. This is because the entropy is a measure of the "randomness" of a system, so we want to find the most deterministic features. Algorithm \eqref{alg:Algorithm3} shows us how to find a proper decision tree using the ID3 (Iterative Dichotomiser 3):
+
+\begin{algorithm}[H]
+    \caption{ID3}
+    \label{alg:Algorithm3}
+    \begin{algorithmic}[3]
+        \IF{No Data Left}
+        \RETURN{mode(Y)}
+        \ENDIF
+        \IF{All Y values are equal}
+        \RETURN{Y[0]}
+        \ENDIF
+        \IF{Only 1 feature in features}
+        \RETURN{mode(Y[feature])}
+        \ENDIF
+        \STATE{Find Best Feature and Delete from Features}
+        \STATE{Find Data above and below Value associated with Feature}
+        \RETURN{[ID3(below, Features), ID3(above, Features)]}
+    \end{algorithmic}
+\end{algorithm}
+
+\noindent From there, we have constructed our DT using the ID3 algorithm. From here, we need to cover the idea behind a Random Forest. Random Forests do what is called \textbf{Bagging}, otherwise known as Bootstrap Aggregation. In essence, this means that in a collection of trees, each tree structure is different when subjected to random sampling. This is a policy that takes advantage of how sensitive a decision tree is to the data it is trained on (due to DT's natural tendency of high variance) \cite{Random_Forest}. Algorithm \eqref{alg:Algorithm4} shows us how to construct a Random Forest:
+
+\begin{algorithm}
+    \caption{Random Forest}
+    \label{alg:Algorithm4}
+    \begin{algorithmic}[4]
+        \FOR{i in range(num\_trees)}
+        \STATE{randomly sample from data}
+        \STATE{randomly sample from features}
+        \STATE{append ID3(data, features) to forest}
+        \ENDFOR
+        \RETURN{forest}
+    \end{algorithmic}
+\end{algorithm}
+
+To classify the data, we then recurse through the tree using the data we wish to look at, and return the classification yielded by the leaf node we land on.

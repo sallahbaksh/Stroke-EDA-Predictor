@@ -1,0 +1,103 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[12pt,letter]{article}
+\usepackage[utf8]{inputenc}
+
+
+% Adjusting margins to personal my need
+\addtolength{\oddsidemargin}{-.5in}
+\addtolength{\evensidemargin}{-.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1in}
+
+% Graphics
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+
+% Math
+\usepackage{amssymb}
+\usepackage{amsmath} % Required for some math elements 
+
+% Other
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{array}
+\usepackage{lipsum}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+}
+\usepackage{forest}
+\forestset{
+    default preamble={
+        for tree={circle,draw}
+    }
+}
+
+
+%----------------------------------------------------------------------------------------
+%	MAIN PART
+%----------------------------------------------------------------------------------------
+\begin{document}
+
+    \title{Stroke Predictions} % Title
+    \author{Chathumini Abeyratna, Saadiya Allahbaksh, Kevin Karnani}
+    \date{\today} % Date for the report
+    \maketitle % Inserts the title, author and date
+
+
+%----------------------------------------------------------------------------------------
+%	Abstract
+%----------------------------------------------------------------------------------------
+    \begin{abstract}
+        \normalsize
+%% Text of the abstract
+        We were curious to see the effect that certain features had in the possibility of a person having a stroke and how well machine learning models predicted stroke. We decided to dive deep into the background research we found, any related work we came across, the dataset we will be using, and the machine learning models that we created to predict stroke based on features. We found that for many cases, \verb|Age| contributed the most to strokes, followed by \verb|BMI| and \verb|Smoking_Status|. Conversely, factors like \verb|Ever_Married|, \verb|Gender|, \verb|Hypertension|, and \verb|Heart_Disease| had little to no effect on strokes.
+
+    \end{abstract}
+
+%----------------------------------------------------------------------------------------
+%	Table of Content
+%----------------------------------------------------------------------------------------
+    \setcounter{tocdepth}{5}
+    \setcounter{secnumdepth}{5}
+    \newpage
+    \tableofcontents
+
+
+    \clearpage
+
+%----------------------------------------------------------------------------------------
+%	Main Part
+%----------------------------------------------------------------------------------------
+    \input{sections/01-introduction}
+    \input{sections/02-dataset}
+    \input{sections/03-methodology}
+    \input{sections/04-methods}
+    \input{sections/05-evaluation}
+    \input{sections/06-conclusion}
+%\input{sections/appendix}
+    \clearpage
+
+%----------------------------------------------------------------------------------------
+%	Appendix
+%----------------------------------------------------------------------------------------
+%\input{sections/appendix}
+
+%----------------------------------------------------------------------------------------
+%	Bibliography
+%----------------------------------------------------------------------------------------
+    \clearpage
+    \bibliography{bibliography/references}{}
+    \bibliographystyle{plainurl}
+
+\end{document}
